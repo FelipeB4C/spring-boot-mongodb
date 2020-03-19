@@ -18,10 +18,10 @@ import com.felipe.workshopmongo.repository.UserRepository;
 public class Instantiation implements CommandLineRunner {
 
 	@Autowired
-	private UserRepository UserRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	private PostRepository PostRepository;
+	private PostRepository postRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -29,20 +29,24 @@ public class Instantiation implements CommandLineRunner {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		UserRepository.deleteAll();
-		PostRepository.deleteAll();
+		userRepository.deleteAll();
+		postRepository.deleteAll();
 
 		User maria = new User(null, "Maria Brown", "maria@gmail.com");
 		User alex = new User(null, "Alex Green", "alex@gmail.com");
 		User bob = new User(null, "Bob Grey", "bob@gmail.com");
 
-		UserRepository.saveAll(Arrays.asList(maria, alex, bob));
+		userRepository.saveAll(Arrays.asList(maria, alex, bob));
 
 		
 		Post post1 = new Post(null, sdf.parse("21/03/2018"), "Partiu viagem", "Vou viajar para SP, Abraços", new AuthorDTO(maria));
 		Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia", "Acordei feliz hoje!", new AuthorDTO(maria));
 
-		PostRepository.saveAll(Arrays.asList(post1, post2));
+		postRepository.saveAll(Arrays.asList(post1, post2));
+		
+		maria.getPosts().addAll(Arrays.asList(post1, post2));
+		
+		userRepository.save(maria);
 	}
 
 }
